@@ -8,13 +8,6 @@ from Products.Five.browser import BrowserView
 from Products.Maps.interfaces import IRichMarker, IMap, IMapView
 from Products.Maps.interfaces import IMapEnabled, IMapEnabledView
 
-try:
-    import json
-except ImportError:
-    import simplejson as json
-
-from zope.annotation.interfaces import IAnnotations
-
 
 class BaseMapView(BrowserView):
     def __init__(self, context, request):
@@ -49,15 +42,6 @@ class BaseMapView(BrowserView):
     def showContents(self):
         return self.config.show_contents
 
-    def getSavedSettings(self):
-        annotations = IAnnotations(self.context)
-        try:
-            return annotations['Products.Maps.map_settings']
-        except KeyError:
-            return '{}';
-
-
-
 class DefaultMapView(BaseMapView):
     implements(IMapView)
     adapts(IMapEnabled)
@@ -77,22 +61,3 @@ class FolderMapView(BaseMapView):
         if self.map is None:
             return False
         return True
-
-
-class SaveMapView(BrowserView):
-    def __call__(self):
-        annotations = IAnnotations(self.context)
-        if 'maptype' in  self.request.form:
-            center = self.request.form.get('center') or self.request.form.get('center[]')
-
-            data = {
-                'maptype': self.request.form['maptype'],
-                'center' : [float(n) for n in center],
-                'zoom' : float(self.request.form['zoom']),
-            }
-            annotations['Products.Maps.map_settings'] = json.dumps(data)
-        else:
-            annotations['Products.Maps.map_settings'] = '{}';
-
-        return "ok"
-

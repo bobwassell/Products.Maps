@@ -1,5 +1,3 @@
-import logging
-
 from zope.i18nmessageid import MessageFactory
 
 from Products.Archetypes.public import listTypes
@@ -10,7 +8,6 @@ from Products.CMFCore.DirectoryView import registerDirectory
 from Products.Maps import config
 
 MapsMessageFactory = MessageFactory('maps')
-logger = logging.getLogger("Products.Maps")
 
 registerDirectory(config.SKINS_DIR, config.GLOBALS)
 

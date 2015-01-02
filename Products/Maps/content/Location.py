@@ -99,13 +99,13 @@ class Location(ATCTContent):
         marker_icons = config.marker_icons
         result = DisplayList()
         for icon in marker_icons:
-            if icon['name'].startswith('_'): continue
             result.add(icon['name'], icon['name'])
         return result
 
     security.declarePublic("getDefaultLocation")
     def getDefaultLocation(self):
-        return [0,0]
+        config = getMultiAdapter((self, self.REQUEST), name="maps_configuration")
+        return config.default_location
 
 registerType(Location, PROJECTNAME)
 
